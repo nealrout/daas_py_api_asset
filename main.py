@@ -14,8 +14,8 @@ from daas_py_common.logging_config import logger
 
 if __name__ == "__main__":
     logger.info("Starting the main function")
-    os.environ['ENV_FOR_DYNACONF'] = 'development'
-    os.environ['DYNACONF_SECRET_KEY'] = 'AsDDm03I6mA6JCdhx16ozj5BDvMtYJMM54Qe2reDPgY='
+    # os.environ['ENV_FOR_DYNACONF'] = 'development'
+    # os.environ['DYNACONF_SECRET_KEY'] = 'ASDF'
     configs = config.get_configs()
     
     asdf = config.get_secret('DATABASE_PASSWORD')

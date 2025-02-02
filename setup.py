@@ -1,18 +1,17 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="daas_api_asset",
+    name="daas_py_api_asset",
     version="0.1.0",
     author="Neal Routson",
     author_email="nroutson@gmail.com",
-    description="A brief description of your project",
+    description="Django API for managing assets",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/nealrout/daas_api_asset_python",
+    url="https://github.com/nealrout/daas_py_api_asset",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
     python_requires=">=3.6",
