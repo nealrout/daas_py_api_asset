@@ -7,6 +7,9 @@ not using some of the built-in features to communicate with the database.  Inste
 are managing stored procedures in the DBMS, which the code calls.  I am doing this as a challange and to create a sepration between
 application code and DBMS code.  The DB developers can have finder control over the actions coming into the DB through stored procedures.
 
+__The Liquibase project containing DB objects:__  
+https://github.com/nealrout/daas_db
+
 
 ## Table of Contents
 
@@ -19,36 +22,38 @@ application code and DBMS code.  The DB developers can have finder control over 
 
 ## Miscellaneous
 ### To activate the virtual environment for this project
-D:\src\GitHub\daas_api_asset_python\.venv\Scripts\activate
-
-### To install all modules in requirements.txt
-pip install -r requirements.txt
-pip install -r ../daas_py_config/requirements.txt
+..\.venv\Scripts\activate
 
 ### Django (notes only)
-To create a new bootstrapped projects:  
+__To create a new bootstrapped projects:__  
 django-admin startproject asset_api
 
 cd asset_api  
 
-To create a new application:  
+__To create a new application:__  
 python manage.py startapp assets
 
-To handle required migrations by built in tools:  
+__To handle required migrations by built in tools:__  
 python manage.py makemigrations  
 python manage.py migrate
 
 ## Uninstall/Install
+__Uninstall:__  
 python -m pip uninstall daas_py_api_asset
 
+__Install:__  
 python -m pip install --user .
 
-Fresh rebuild from source:  
+
+__Rebuild from source:__  
 python -m pip install --no-binary :all: .
 
 
 ## Usage
+__Set correct directory:__  
 cd .\asset_api\  
+
+__Start Django api:__  
 python manage.py runserver
 
 ## Package
