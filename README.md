@@ -11,7 +11,9 @@ application code and DBMS code.  The DB developers can have finder control over 
 ## Table of Contents
 
 - [Miscellaneous](#miscellaneous)
+- [Uninstall/Install](#uninstall/install)
 - [Usage](#usage)
+- [Package](#package)
 - [Features](#features)
 - [Contact](#contact)
 
@@ -36,8 +38,21 @@ To handle required migrations by built in tools:
 python manage.py makemigrations  
 python manage.py migrate
 
+## Uninstall/Install
+python -m pip uninstall daas_py_api_asset
+
+python -m pip install --user .
+
+Fresh rebuild from source:  
+python -m pip install --no-binary :all: .
+
+
 ## Usage
+cd .\asset_api\  
 python manage.py runserver
+
+## Package
+python setup.py sdist
 
 ## Features
 - List assets with pagination.

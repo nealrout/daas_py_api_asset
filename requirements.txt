@@ -1,5 +1,8 @@
+daas_py_config @ file:../daas_py_config
 requests
 django
 djangorestframework
 psycopg2
 python-dotenv
+setuptools
+wheel
