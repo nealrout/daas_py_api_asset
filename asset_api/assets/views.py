@@ -10,8 +10,6 @@ Date: 2025-02-02
 Version: 0.1
 """
 from rest_framework.views import APIView
-# from .models import Asset
-# from .serializers import AssetSerializer
 from django.db import connection
 from rest_framework.response import Response
 from rest_framework import status

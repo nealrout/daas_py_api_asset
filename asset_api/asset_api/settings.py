@@ -147,3 +147,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Custom test runner to skip database setup
+TEST_RUNNER = 'asset_api.test_runner.NoDbTestRunner'
