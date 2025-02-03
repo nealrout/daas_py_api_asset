@@ -13,12 +13,35 @@ https://github.com/nealrout/daas_db
 
 ## Table of Contents
 
-- [Miscellaneous](#miscellaneous)
-- [Uninstall/Install](#uninstall/install)
+- [Requirements](#requirements)
+- [Uninstall-Install](#uninstall-install)
 - [Usage](#usage)
 - [Package](#package)
 - [Features](#features)
+- [Miscellaneous](#miscellaneous)
 - [Contact](#contact)
+
+## Requirements
+__Set .env variables for configuration__  
+
+ENV_FOR_DYNACONF=\<environment\>  
+_i.e. development, integration, production_  
+
+DYNACONF_SECRET_KEY=\<secret_key\>
+
+## Usage
+__Set correct directory:__  
+cd .\asset_api\  
+
+__Start Django api:__  
+python manage.py runserver
+
+## Package
+python setup.py sdist
+
+## Features
+- List assets with pagination.
+- Asset retrieve update destroy: api for updating or deleting asset records.
 
 ## Miscellaneous
 ### To activate the virtual environment for this project
@@ -37,7 +60,7 @@ __To handle required migrations by built in tools:__
 python manage.py makemigrations  
 python manage.py migrate
 
-## Uninstall/Install
+## Uninstall-Install
 __Uninstall:__  
 python -m pip uninstall daas_py_api_asset
 
@@ -47,21 +70,6 @@ python -m pip install --user .
 
 __Rebuild from source:__  
 python -m pip install --no-binary :all: .
-
-
-## Usage
-__Set correct directory:__  
-cd .\asset_api\  
-
-__Start Django api:__  
-python manage.py runserver
-
-## Package
-python setup.py sdist
-
-## Features
-- List assets with pagination.
-- Asset retrieve update destroy: api for updating or deleting asset records.
 
 ## Contact
 Neal Routson  
