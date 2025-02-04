@@ -66,7 +66,7 @@ class AssetRetrieveUpdateDestroyTest(TestCase):
         response = self.client.put(self.asset_detail_url, {
             "asset_id": "A126",
             "sys_id": "SYS4",
-            "fac_cd": "FAC4"
+            "fac_code": "FAC4"
         }, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

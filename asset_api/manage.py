@@ -2,7 +2,11 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from bootstrap import bootstrap
 
+logger, config = bootstrap()
+configs = config.get_configs()
+logger.info(f'Starting Django manage')
 
 def main():
     """Run administrative tasks."""

@@ -13,21 +13,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 import sys
 from pathlib import Path
-from dotenv import load_dotenv
+from manage import logger, config
 
-# Load environment variables from .env file
-load_dotenv()
-
-cwd = os.getcwd()
-# Build the relative path to the sibling project
-project_path = os.path.abspath(os.path.join(cwd, '../..'))
-# Add the project path to sys.path
-sys.path.insert(0, project_path)
-
-from daas_py_common.logging_config import logger
-from daas_py_config import config
-
-logger.info(f'Starting Django application')
+logger.info(f'Loading Django settings')
 # Load configurations from daas_py_config
 configs = config.get_configs()
 
