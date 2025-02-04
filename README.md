@@ -1,4 +1,7 @@
 # daas_api_asset_python
+## Project
+
+Refrence of DaaS Project - https://github.com/nealrout/daas_docs
 
 ## Description
 
@@ -28,6 +31,16 @@ ENV_FOR_DYNACONF=\<environment\>
 _i.e. development, integration, production_  
 
 DYNACONF_SECRET_KEY=\<secret_key\>
+
+## Uninstall-Install
+__Uninstall:__  
+python -m pip uninstall daas_py_api_asset
+
+__Install:__  
+python -m pip install --user .
+
+__Rebuild from source:__  
+python -m pip install --no-binary :all: .
 
 ## Usage
 __Set correct directory:__  
@@ -59,17 +72,6 @@ python manage.py startapp assets
 __To handle required migrations by built in tools:__  
 python manage.py makemigrations  
 python manage.py migrate
-
-## Uninstall-Install
-__Uninstall:__  
-python -m pip uninstall daas_py_api_asset
-
-__Install:__  
-python -m pip install --user .
-
-
-__Rebuild from source:__  
-python -m pip install --no-binary :all: .
 
 ## Contact
 Neal Routson  
