@@ -37,7 +37,7 @@ __Uninstall:__
 python -m pip uninstall daas_py_api_asset
 
 __Install:__  
-python -m pip install --user .
+python -m pip install .
 
 __Rebuild from source:__  
 python -m pip install --no-binary :all: .
@@ -57,6 +57,10 @@ python setup.py sdist
 - Asset retrieve update destroy: api for updating or deleting asset records.
 
 ## Miscellaneous
+
+### To create new virtual environment  
+python -m venv myenv
+
 ### To activate the virtual environment for this project
 ..\.venv\Scripts\activate
 

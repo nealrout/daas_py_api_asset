@@ -19,19 +19,21 @@ from rest_framework.pagination import PageNumberPagination
 from daas_py_config import config
 from daas_py_common.logging_config import logger
 import pysolr
+import json
 
 configs = config.get_configs()
 SOLR_URL = f"{configs.SOLR_URL}/{configs.SOLR_COLLECTION_ASSET}"
 logger.info (f'SOLR_URL: {SOLR_URL}')
 
 # When navigating to the /api/ endpoint, we will show what API are available.
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def api_root(request, format=None):
     """API root view to list available endpoints."""
     return Response({
         'asset_detail': reverse('asset-detail', request=request, format=format),
-        'assets_summary': reverse('asset-summary', request=request, format=format),
-        'asset-upsert': reverse('asset-upsert', args=[1], request=request, format=format),  # Example with ID 1
+        'asset-detail-multiple': reverse('asset-detail-multiple', request=request, format=format),
+        'asset_summary': reverse('asset-summary', request=request, format=format),
+        'asset-upsert': reverse('asset-upsert', args=[1], request=request, format=format), 
     })
 
 # Class for getting all assets.
@@ -41,9 +43,10 @@ class AssetListDetail(APIView):
     """
 
     def get(self, request):
+        
         """Retrieve all assets using a stored procedure"""
         with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM get_all_assets();")
+            cursor.execute(f"SELECT * FROM {configs.DB_PROC_GET_ASSETS}();")
             columns = [col[0] for col in cursor.description]  # Get column names
             results = [dict(zip(columns, row)) for row in cursor.fetchall()]  # Convert to dictionary
 
@@ -62,7 +65,7 @@ class AssetListDetail(APIView):
         data = request.data
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT * FROM create_asset(%s, %s, %s);",
+                f"SELECT * FROM {configs.DB_PROC_CREATE_ASSETS}(%s, %s, %s);",
                 [data.get("asset_id"), data.get("sys_id"), data.get("fac_code")]
             )
             row = cursor.fetchone()
@@ -71,39 +74,83 @@ class AssetListDetail(APIView):
 
         return Response(result, status=status.HTTP_201_CREATED)
 
+# Class for getting all assets in the provided json.
+class AssetListDetailMultiple(APIView):
+    """
+    Custom API view to retrieve multiple assets using stored procedures.
+    """
+
+    def post(self, request):
+        """Retrieve multiple assets using a stored procedure with JSON list of IDs"""
+        asset_ids = request.data.get("ids", [])
+
+        if not asset_ids:
+            return Response({"error": "No asset IDs provided"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            json_ids = json.dumps([int(i) for i in asset_ids])
+            logger.debug(f"json_ids: {json_ids}")
+
+            with connection.cursor() as cursor:
+                cursor.execute(f"SELECT * FROM {configs.DB_PROC_GET_ASSET_ID}(%s);", [json_ids])
+                rows = cursor.fetchall()
+
+                if rows:
+                    columns = [col[0] for col in cursor.description]
+                    results = [dict(zip(columns, row)) for row in rows]
+                    return Response(results)
+
+            return Response({"error": "No assets found"}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as e:
+            logger.error(f"Error retrieving assets: {str(e)}")
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 # Class for get, update, delete on a specific asset.
-class AssetRetrieveUpdateDestroy(APIView):
+class AssetUpsert(APIView):
     """
     Custom API view to retrieve, update, or delete an asset using stored procedures.
     """
-
     def get(self, request, pk):
-        """Retrieve an asset using a stored procedure"""
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM get_asset_by_id(%s);", [pk])
-            row = cursor.fetchone()
-            if row:
-                columns = [col[0] for col in cursor.description]
-                result = dict(zip(columns, row))
-                return Response(result)
-            return Response({"error": "Asset not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        asset_ids = request.query_params.getlist('id', [pk])
+
+        if not asset_ids:
+            return Response({"error": "No asset IDs provided"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            json_ids = json.dumps([int(i) for i in asset_ids])
+            logger.debug(f"json_ids: {json_ids}")
+            """Retrieve an asset using a stored procedure"""
+            with connection.cursor() as cursor:
+                cursor.execute(f"SELECT * FROM {configs.DB_PROC_GET_ASSET_ID}(%s);", [json_ids])
+                row = cursor.fetchone()
+                if row:
+                    columns = [col[0] for col in cursor.description]
+                    result = dict(zip(columns, row))
+                    return Response(result)
+                return Response({"error": "Asset not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def put(self, request, pk):
+        
         """Update an asset using a stored procedure"""
         data = request.data
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT update_asset(%s, %s, %s, %s);",
-                [pk, data.get("asset_id"), data.get("sys_id"), data.get("fac_cd")]
+                f"SELECT update_{configs.DB_PROC_UPDATE_ASSET}asset(%s, %s, %s, %s);",
+                [pk, data.get("asset_id"), data.get("sys_id"), data.get("fac_code")]
             )
         return Response({"message": "Asset updated successfully"})
 
     def delete(self, request, pk):
         """Delete an asset using a stored procedure"""
         with connection.cursor() as cursor:
-            cursor.execute("SELECT delete_asset(%s);", [pk])
+            cursor.execute(f"SELECT {configs.DB_PROC_DELETE_ASSET}(%s);", [pk])
         return Response({"message": "Asset deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
+#  Class for getting all assets from SOLR.
 class AssetListSummary(APIView):
     """
     API view to fetch assets from a SOLR instance.
